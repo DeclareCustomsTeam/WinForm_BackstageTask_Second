@@ -1,0 +1,13 @@
+E:\WebMVC\File\File\bin\Debug\File.exe.config
+E:\WebMVC\File\File\bin\Debug\File.exe
+E:\WebMVC\File\File\bin\Debug\File.pdb
+E:\WebMVC\File\File\obj\Debug\File.Properties.Resources.resources
+E:\WebMVC\File\File\obj\Debug\File.csproj.GenerateResource.Cache
+E:\WebMVC\File\File\obj\Debug\File.exe
+E:\WebMVC\File\File\obj\Debug\File.pdb
+E:\WebMVC\File\File\obj\Debug\File.csprojResolveAssemblyReference.cache
+E:\WebMVC\File\File\obj\Debug\File.Form1.resources
+E:\WebMVC\File\File\bin\Debug\ServiceStack.Interfaces.dll
+E:\WebMVC\File\File\bin\Debug\ServiceStack.Redis.dll
+E:\WebMVC\File\File\bin\Debug\ServiceStack.Common.dll
+E:\WebMVC\File\File\bin\Debug\ServiceStack.Text.dll

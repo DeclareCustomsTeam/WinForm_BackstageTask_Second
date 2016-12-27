@@ -1,0 +1,15 @@
+E:\WebMVC\FileCompress_Second\obj\Debug\FileCompress_Second.csprojResolveAssemblyReference.cache
+E:\WebMVC\FileCompress_Second\obj\Debug\FileCompress_Second.csproj.GenerateResource.Cache
+E:\WebMVC\FileCompress_Second\obj\Debug\FileCompress_Second.Form1.resources
+E:\WebMVC\FileCompress_Second\obj\Debug\FileCompress_Second.Properties.Resources.resources
+E:\WebMVC\FileCompress_Second\bin\Debug\FileCompress_Second.exe.config
+E:\WebMVC\FileCompress_Second\bin\Debug\FileCompress_Second.exe
+E:\WebMVC\FileCompress_Second\bin\Debug\FileCompress_Second.pdb
+E:\WebMVC\FileCompress_Second\bin\Debug\Oracle.ManagedDataAccess.dll
+E:\WebMVC\FileCompress_Second\bin\Debug\ServiceStack.Common.dll
+E:\WebMVC\FileCompress_Second\bin\Debug\ServiceStack.Interfaces.dll
+E:\WebMVC\FileCompress_Second\bin\Debug\ServiceStack.Redis.dll
+E:\WebMVC\FileCompress_Second\bin\Debug\ServiceStack.Text.dll
+E:\WebMVC\FileCompress_Second\obj\Debug\FileCompress_Second.exe
+E:\WebMVC\FileCompress_Second\obj\Debug\FileCompress_Second.pdb
+E:\WebMVC\FileCompress_Second\bin\Debug\itextsharp.dll
