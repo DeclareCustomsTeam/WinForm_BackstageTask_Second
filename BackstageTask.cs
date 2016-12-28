@@ -243,19 +243,21 @@ namespace BackstageTask_Second
                                     {
                                         string[] split = fs.Name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
                                         result = ftp.DownloadFile(@"\" + fs.Name, direc_pdf + destination + @"\" + split[0] + "_0." + split[1]);
-                                        //StreamReader sr = new StreamReader(direc_pdf + destination + @"\" + fs.Name, Encoding.GetEncoding("BIG5"));
-                                        StreamReader sr = new StreamReader(direc_pdf + destination + @"\" + split[0] + "_0." + split[1], Encoding.GetEncoding("BIG5"));
-                                        String line;
-                                        FileStream fs2 = new FileStream(direc_pdf + destination + @"\" + fs.Name, FileMode.Create);
-                                        while ((line = sr.ReadLine()) != null)
+                                        if (File.Exists(direc_pdf + destination + @"\" + split[0] + "_0." + split[1])) //文件在下载成功的情况下
                                         {
-                                            byte[] dst = Encoding.UTF8.GetBytes(line);
-                                            fs2.Write(dst, 0, dst.Length);
-                                            fs2.WriteByte(13);
-                                            fs2.WriteByte(10);
+                                            StreamReader sr = new StreamReader(direc_pdf + destination + @"\" + split[0] + "_0." + split[1], Encoding.GetEncoding("BIG5"));
+                                            String line;
+                                            FileStream fs2 = new FileStream(direc_pdf + destination + @"\" + fs.Name, FileMode.Create);
+                                            while ((line = sr.ReadLine()) != null)
+                                            {
+                                                byte[] dst = Encoding.UTF8.GetBytes(line);
+                                                fs2.Write(dst, 0, dst.Length);
+                                                fs2.WriteByte(13);
+                                                fs2.WriteByte(10);
+                                            }
+                                            fs2.Flush();  //清空缓冲区、关闭流
+                                            fs2.Close();
                                         }
-                                        fs2.Flush();  //清空缓冲区、关闭流
-                                        fs2.Close();
                                     }
                                     else
                                     {
@@ -266,9 +268,13 @@ namespace BackstageTask_Second
                                         ftp.MoveFile(@"\" + fs.Name, @"\backup\" + fs.Name);
                                     }
                                 }
+                                else
+                                {
+                                    working3 = false;
+                                }
                             }
                         }
-                    } 
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -372,8 +378,8 @@ namespace BackstageTask_Second
             #endregion
             catch (Exception ex)
             {
-                this.button3.Text = ex.Message;
-                content = false;
+                this.button3.Text = "database_" + ex.Message;
+                content = false; 
             }
             return content;
         }
@@ -533,6 +539,6 @@ namespace BackstageTask_Second
                     }
                 }
             }
-        } 
+        }
     }
 }
