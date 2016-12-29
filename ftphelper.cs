@@ -485,9 +485,9 @@ namespace Common
         /// <returns></returns>
         public List<FileStruct> GetFileAndDirectoryList(string direcotry)
         {
+            List<FileStruct> list = new List<FileStruct>();
             try
             {
-                List<FileStruct> list = new List<FileStruct>();
                 string str = null;
                 //WebRequestMethods.Ftp.ListDirectoryDetails可以列出所有的文件和目录列表
                 //WebRequestMethods.Ftp.ListDirectory只能列出目录的文件列表
@@ -504,12 +504,12 @@ namespace Common
                 {
                     list = ParseFileStruct(fileList, format);
                 }
-                return list;
             }
             catch (WebException ex)
             {
-                throw ex;
+                //throw ex;
             }
+            return list;
         }
 
         /// <summary>
