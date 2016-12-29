@@ -147,7 +147,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BackstageTask.csproj.user" />
     <Content Include="lib\itextsharp.dll" />
     <Content Include="lib\MessagingToolkit.Barcode.dll" />
     <Content Include="lib\Newtonsoft.Json.dll" />
