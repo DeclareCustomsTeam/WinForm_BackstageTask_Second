@@ -243,7 +243,7 @@ namespace BackstageTask_Second
                                     {
                                         string[] split = fs.Name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
                                         result = ftp.DownloadFile(@"\" + fs.Name, direc_pdf + destination + @"\" + split[0] + "_0." + split[1]);
-                                        if (File.Exists(direc_pdf + destination + @"\" + split[0] + "_0." + split[1])) //文件在下载成功的情况下
+                                        if (result) //文件在下载成功的情况下
                                         {
                                             StreamReader sr = new StreamReader(direc_pdf + destination + @"\" + split[0] + "_0." + split[1], Encoding.GetEncoding("BIG5"));
                                             String line;
@@ -257,6 +257,10 @@ namespace BackstageTask_Second
                                             }
                                             fs2.Flush();  //清空缓冲区、关闭流
                                             fs2.Close();
+                                        }
+                                        else
+                                        {
+                                            working3 = false;//如果文件下载失败
                                         }
                                     }
                                     else
