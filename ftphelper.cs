@@ -224,8 +224,7 @@ namespace Common
             return false;
         }
         #endregion
-
-        #region 下载文件
+                
         /// <summary>
         /// 从FTP服务器下载文件
         /// </summary>
@@ -259,38 +258,7 @@ namespace Common
                 this.ErrorMsg = ex.Message;
             }
             return false;
-        }
-        public bool DownloadFile2(string remoteFilePath, string localFilePath)
-        {
-            try
-            {
-                string localDirector = Path.GetDirectoryName(localFilePath);
-                if (!Directory.Exists(localDirector))
-                {
-                    Directory.CreateDirectory(localDirector);
-                }
-                FtpWebResponse response = CreateResponse(new Uri(this.Uri + remoteFilePath), WebRequestMethods.Ftp.DownloadFile);
-                byte[] buffer = new byte[52048];
-                int bytesCount = 0;
-                Stream stream = response.GetResponseStream();               
-                using (FileStream fs = new FileStream(localFilePath, FileMode.Create))
-                {
-                    while ((bytesCount = stream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        byte[] buffer2 = Big5ToUtf8(buffer);//仁宝的文件是BIG5编码的需要转换 add by panhuaguo 2016-11-09
-                        fs.Write(buffer2, 0, bytesCount);
-                    }
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                this.Exception = ex;
-                this.ErrorMsg = ex.Message;
-            }
-            return false;
-        }
-        #endregion
+        } 
         public static byte[] Big5ToUtf8(byte[] src)
         {
             string s = Encoding.GetEncoding("BIG5").GetString(src);//追加一个结束标记+ "\0"
@@ -511,7 +479,6 @@ namespace Common
             }
             return list;
         }
-
         /// <summary>
         /// 解析文件列表信息返回文件列表
         /// </summary>
@@ -540,6 +507,7 @@ namespace Common
                             fstuct.OriginArr[7] = DateTime.Now.Year + " " + fstuct.OriginArr[7];
                         }
                         fstuct.UpdateTime = DateTime.Parse(string.Format("{0} {1} {2}", fstuct.OriginArr[5], fstuct.OriginArr[6], fstuct.OriginArr[7]));
+                        // fstuct.UpdateTime=
                         fstuct.Name = fstuct.OriginArr[8];
                         if (fstuct.Name != "." && fstuct.Name != "..")
                         {

@@ -28,8 +28,7 @@ namespace BackstageTask_Second
         bool working2 = false;
         bool working3 = false;
         bool working4 = false;
-        bool working5 = false;
-        bool working7 = false;
+        bool working5 = false; 
         string barcode = string.Empty;
         string sql = string.Empty;
         string guid = string.Empty;
