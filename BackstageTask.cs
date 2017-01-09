@@ -242,38 +242,49 @@ namespace BackstageTask_Second
                                     {
                                         string[] split = fs.Name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
                                         result = ftp.DownloadFile(@"\" + fs.Name, direc_pdf + destination + @"\" + split[0] + "_0." + split[1]);
-                                        if (result) //文件在下载成功的情况下
+                                        if (result) //TXT文件在下载成功的情况下
                                         {
-                                            StreamReader sr = new StreamReader(direc_pdf + destination + @"\" + split[0] + "_0." + split[1], Encoding.GetEncoding("BIG5"));
-                                            String line;
-                                            FileStream fs2 = new FileStream(direc_pdf + destination + @"\" + fs.Name, FileMode.Create);
-                                            while ((line = sr.ReadLine()) != null)
+                                            try
                                             {
-                                                byte[] dst = Encoding.UTF8.GetBytes(line);
-                                                fs2.Write(dst, 0, dst.Length);
-                                                fs2.WriteByte(13);
-                                                fs2.WriteByte(10);
+                                                StreamReader sr = new StreamReader(direc_pdf + destination + @"\" + split[0] + "_0." + split[1], Encoding.GetEncoding("BIG5"));
+                                                String line;
+                                                FileStream fs2 = new FileStream(direc_pdf + destination + @"\" + fs.Name, FileMode.Create);
+                                                while ((line = sr.ReadLine()) != null)
+                                                {
+                                                    byte[] dst = Encoding.UTF8.GetBytes(line);
+                                                    fs2.Write(dst, 0, dst.Length);
+                                                    fs2.WriteByte(13);
+                                                    fs2.WriteByte(10);
+                                                }
+                                                fs2.Flush();  //清空缓冲区、关闭流
+                                                fs2.Close();
                                             }
-                                            fs2.Flush();  //清空缓冲区、关闭流
-                                            fs2.Close();
+                                            catch
+                                            {
+                                                result = false;
+                                            }
                                         }
                                         else
                                         {
-                                            working3 = false;//如果文件下载失败
+                                            working3 = false;//如果txt文件下载失败
                                         }
                                     }
                                     else
                                     {
                                         result = ftp.DownloadFile(@"\" + fs.Name, direc_pdf + destination + @"\" + fs.Name);
                                     }
-                                    if (result)
+                                    if (result)//pdf下载成功的情况下
                                     {
                                         ftp.MoveFile(@"\" + fs.Name, @"\backup\" + fs.Name);
+                                    }
+                                    else
+                                    {
+                                        working3 = false;//如果pdf文件下载失败
                                     }
                                 }
                                 else
                                 {
-                                    working3 = false;
+                                    working3 = false;//数据库写入失败
                                 }
                             }
                         }

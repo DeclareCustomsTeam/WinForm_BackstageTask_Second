@@ -224,7 +224,7 @@ namespace Common
             return false;
         }
         #endregion
-                
+
         /// <summary>
         /// 从FTP服务器下载文件
         /// </summary>
@@ -232,6 +232,7 @@ namespace Common
         /// <param name="localFilePath">本地带有完整路径的文件名</param>
         public bool DownloadFile(string remoteFilePath, string localFilePath)
         {
+            bool result = false;
             try
             {
                 string localDirector = Path.GetDirectoryName(localFilePath);
@@ -250,15 +251,15 @@ namespace Common
                         fs.Write(buffer, 0, bytesCount);
                     }
                 }
-                return true;
+                result = true;
             }
             catch (Exception ex)
             {
                 this.Exception = ex;
                 this.ErrorMsg = ex.Message;
             }
-            return false;
-        } 
+            return result;
+        }
         public static byte[] Big5ToUtf8(byte[] src)
         {
             string s = Encoding.GetEncoding("BIG5").GetString(src);//追加一个结束标记+ "\0"
