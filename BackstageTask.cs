@@ -28,7 +28,8 @@ namespace BackstageTask_Second
         bool working2 = false;
         bool working3 = false;
         bool working4 = false;
-        bool working5 = false; 
+        bool working5 = false;
+        bool working6 = false;
         string barcode = string.Empty;
         string sql = string.Empty;
         string guid = string.Empty;
@@ -39,6 +40,8 @@ namespace BackstageTask_Second
         System.Uri compal_ftp_uri = new Uri("ftp://" + ConfigurationManager.AppSettings["compalftpip"] + ":21");
         FtpHelper ftp = null;
         IDatabase db = SeRedis.redis.GetDatabase();
+
+        FtpHelper ftp_mov = null;
         public BackstageTask()
         {
             InitializeComponent();
@@ -85,6 +88,7 @@ namespace BackstageTask_Second
         private void Form1_Load(object sender, EventArgs e)
         {
             ftp = new FtpHelper(compal_ftp_uri, compal_ftp_username, compal_ftp_psd);
+            
         }
         public enum Definition
         {
@@ -267,6 +271,7 @@ namespace BackstageTask_Second
                                         else
                                         {
                                             working3 = false;//如果txt文件下载失败
+                                            break;
                                         }
                                     }
                                     else
@@ -280,11 +285,13 @@ namespace BackstageTask_Second
                                     else
                                     {
                                         working3 = false;//如果pdf文件下载失败
+                                        break;
                                     }
                                 }
                                 else
                                 {
                                     working3 = false;//数据库写入失败
+                                    break;
                                 }
                             }
                         }
@@ -553,6 +560,31 @@ namespace BackstageTask_Second
                     }
                 }
             }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            this.timer6.Enabled = true;
+            this.button6.Text = "运行中";
+            this.button6.Enabled = false;
+        }
+
+        private void timer6_Tick(object sender, EventArgs e)
+        {
+            string sql = "select * from FILEMANAGE where filetype='CustomsFile'  and valid IS NULL  and ROWNUM<=10";
+            DataTable dt_filemanage=DBMgrMov.GetDataTable(sql);
+            foreach (DataRow dr in dt_filemanage.Rows)
+            {
+              string fileid = string.Empty;
+              string filemanageid = string.Empty;
+              fileid = dr["fileid"].ToString();
+              filemanageid = dr["filemanageid"].ToString();
+              DataTable dt_fileitem = DBMgrMov.GetDataTable("select * from fileitem where id="+fileid);
+              DataTable dt_filemanagedetail = DBMgrMov.GetDataTable("select * from filemanagedetail where id=" + filemanageid);
+             
+              
+            }
+
         }
     }
 }

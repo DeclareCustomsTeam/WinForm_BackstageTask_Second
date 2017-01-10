@@ -44,6 +44,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.timer5 = new System.Windows.Forms.Timer(this.components);
+            this.timer6 = new System.Windows.Forms.Timer(this.components);
+            this.label6 = new System.Windows.Forms.Label();
+            this.button6 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -166,11 +169,37 @@
             this.timer5.Interval = 150;
             this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
             // 
+            // timer6
+            // 
+            this.timer6.Interval = 20000;
+            this.timer6.Tick += new System.EventHandler(this.timer6_Tick);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 202);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(65, 12);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "6 文件转移";
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(183, 197);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(577, 22);
+            this.button6.TabIndex = 9;
+            this.button6.Text = "启动";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // BackstageTask
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(772, 362);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.button4);
@@ -206,6 +235,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Timer timer5;
+        private System.Windows.Forms.Timer timer6;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button6;
     }
 }
 
