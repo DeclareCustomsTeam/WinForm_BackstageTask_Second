@@ -581,7 +581,7 @@ namespace BackstageTask_Second
                 try
                 {
                     PdfReader pdfReader;
-                    string sql = "select * from FILEMANAGE where filetype='CustomsFile' and valid IS NULL and filename is null and createtime > to_date('2015-12-31 23:59:59','yyyy-mm-dd hh24:mi:ss') and ROWNUM<=5";
+                    string sql = "select * from FILEMANAGE where businessno is not null and filetype='CustomsFile' and valid IS NULL and filename is null and createtime > to_date('2015-12-31 23:59:59','yyyy-mm-dd hh24:mi:ss') and ROWNUM<=5";
                     DataTable dt_filemanage = DBMgrMov.GetDataTable(sql);
                     string ordercode = string.Empty;
                     //int attachmentid=2;
@@ -615,7 +615,7 @@ namespace BackstageTask_Second
                                 int isupload = 1;
                                 string filesuffix = dt_fileitem.Rows[0]["extname"].ToString();
                                 string filetypename = "订单文件";
-                                int splitstatus = 0;
+                                int splitstatus = 1;
                                 //if (dt_filemanagedetail.Rows.Count != 0)
                                 //{
                                 //    splitstatus = 1;
