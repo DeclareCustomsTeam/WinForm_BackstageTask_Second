@@ -581,7 +581,7 @@ namespace BackstageTask_Second
                 try
                 {
                     PdfReader pdfReader;
-                    string sql = "select * from FILEMANAGE where filetype='CustomsFile' and valid IS NULL and filename is null and createtime > to_date('2015-12-31 23:59:59','yyyy-mm-dd hh24:mi:ss') and ROWNUM<=100";
+                    string sql = "select * from FILEMANAGE where filetype='CustomsFile' and valid IS NULL and filename is null and createtime > to_date('2015-12-31 23:59:59','yyyy-mm-dd hh24:mi:ss') and ROWNUM<=5";
                     DataTable dt_filemanage = DBMgrMov.GetDataTable(sql);
                     string ordercode = string.Empty;
                     //int attachmentid=2;
@@ -590,13 +590,13 @@ namespace BackstageTask_Second
                         string fileid = string.Empty;
                         string filemanageid = string.Empty;
                         ordercode = dr["businessno"].ToString();
-                        DataTable dt_list = DBMgr.GetDataTable("select * from list_attachment where ORDERCODE='" + ordercode + "'");
+                        DataTable dt_list = DBMgr.GetDataTable("select * from list_attachment where ORDERCODE='" + ordercode + "' and filetype=44");
                         if (dt_list.Rows.Count == 0)
                         {
                             fileid = dr["fileid"].ToString();
                             filemanageid = dr["id"].ToString();
                             DataTable dt_fileitem = DBMgrMov.GetDataTable("select * from fileitem where id='" + fileid + "'");
-                            DataTable dt_filemanagedetail = DBMgrMov.GetDataTable("select * from filemanagedetail where id='" + filemanageid + "'");
+                            //DataTable dt_filemanagedetail = DBMgrMov.GetDataTable("select * from filemanagedetail where filemanageid='" + filemanageid + "'");
                             if (dt_fileitem.Rows.Count != 0)
                             {
                                 string fileitemPath = dt_fileitem.Rows[0]["path"].ToString().Trim();
@@ -616,10 +616,10 @@ namespace BackstageTask_Second
                                 string filesuffix = dt_fileitem.Rows[0]["extname"].ToString();
                                 string filetypename = "订单文件";
                                 int splitstatus = 0;
-                                if (dt_filemanagedetail.Rows.Count != 0)
-                                {
-                                    splitstatus = 1;
-                                }
+                                //if (dt_filemanagedetail.Rows.Count != 0)
+                                //{
+                                //    splitstatus = 1;
+                                //}
                                 string url = "http://172.20.70.98:7003/Document/" + fileitemPath + "/" + item_id + "_" + fileitemName;
                                 int filepages = 0;
 
@@ -631,15 +631,11 @@ namespace BackstageTask_Second
 
 
                                 //更新数据附件数据表
-                                string sqlupdate = "insert into list_attachment (filename,originalname,uploadtime,filetype,sizes,ordercode,filesuffix,filetypename,splitstatus,isupload,filepages,ordercount) "
-                                                 + "values  ('{0}','{1}',sysdate,'{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',0)";
+                                string sqlupdate = "insert into list_attachment (filename,originalname,filetype,sizes,ordercode,filesuffix,filetypename,splitstatus,isupload,filepages,uploadtime,ordercount) "
+                                                 + "values  ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',to_date('" + dr["createtime"].ToString() + "','yyyy-MM-dd HH24:mi:ss'),0)";
                                 sqlupdate = string.Format(sqlupdate, filename, originalname, filetype, sizes, ordercode, filesuffix, filetypename, splitstatus, isupload, filepages);
                                 int updateSuccess = DBMgr.ExecuteNonQuery(sqlupdate);
-
-                                if (updateSuccess == 1)
-                                {
-                                    DBMgrMov.ExecuteNonQuery("update FILEMANAGE  set filename='Y' where businessno='" + ordercode + "'");
-                                }
+                                
                                 //获取attachmentid
                                 // DataTable dt_fileitem_new = DBMgrMov.GetDataTable("select id from list_attachment where ordercode='" + ordercode + "'");
                                 //if (dt_fileitem_new.Rows.Count > 1)
@@ -702,6 +698,7 @@ namespace BackstageTask_Second
                         //    }   
 
                         //}
+                        DBMgrMov.ExecuteNonQuery("update FILEMANAGE  set filename='Y' where businessno='" + ordercode + "' and filetype='CustomsFile' and valid IS NULL and filename is null");
                     }
                 }
                 catch (Exception ex)

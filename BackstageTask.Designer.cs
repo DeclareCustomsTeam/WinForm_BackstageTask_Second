@@ -174,7 +174,7 @@
             // 
             // timer6
             // 
-            this.timer6.Interval = 5000;
+            this.timer6.Interval = 1500;
             this.timer6.Tick += new System.EventHandler(this.timer6_Tick);
             // 
             // label6
