@@ -566,14 +566,13 @@ namespace BackstageTask_Second
             }
         }
 
+        #region 这两个只是暂时使用的功能
         private void button6_Click(object sender, EventArgs e)
         {
             this.timer6.Enabled = true;
             this.button6.Text = "运行中";
             this.button6.Enabled = false;
         }
-
-        #region
         private void timer6_Tick(object sender, EventArgs e)
         {
             if (!working6)
@@ -717,6 +716,12 @@ namespace BackstageTask_Second
 
         }
 
+        private void button7_Click(object sender, EventArgs e)
+        {
+            this.timer7.Enabled = true;
+            this.button7.Text = "运行中";
+            this.button7.Enabled = false;
+        }
         private void timer7_Tick(object sender, EventArgs e)
         {
             PdfReader pdfReader;
@@ -759,12 +764,6 @@ namespace BackstageTask_Second
            
         }
 
-        private void button7_Click(object sender, EventArgs e)
-        {
-            this.timer7.Enabled = true;
-            this.button7.Text = "运行中";
-            this.button7.Enabled = false;
-        }
     }
 }
         #endregion
