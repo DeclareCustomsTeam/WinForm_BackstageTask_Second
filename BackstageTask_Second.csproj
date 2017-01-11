@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBMgrMov.cs" />
     <Compile Include="DBMgr.cs" />
     <Compile Include="BackstageTask.cs">
       <SubType>Form</SubType>

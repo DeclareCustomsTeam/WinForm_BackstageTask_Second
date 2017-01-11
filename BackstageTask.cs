@@ -30,6 +30,7 @@ namespace BackstageTask_Second
         bool working4 = false;
         bool working5 = false;
         bool working6 = false;
+        bool working7 = false;
         string barcode = string.Empty;
         string sql = string.Empty;
         string guid = string.Empty;
@@ -42,6 +43,9 @@ namespace BackstageTask_Second
         IDatabase db = SeRedis.redis.GetDatabase();
 
         FtpHelper ftp_mov = null;
+        string compal_ftp_username_mov = ConfigurationManager.AppSettings["compalftpusername_mov"];
+        string compal_ftp_psd_mov = ConfigurationManager.AppSettings["compalftppassword_mov"];
+        System.Uri compal_ftp_uri_mov = new Uri("ftp://" + ConfigurationManager.AppSettings["compalftpip_mov"] + ":21");
         public BackstageTask()
         {
             InitializeComponent();
@@ -88,7 +92,7 @@ namespace BackstageTask_Second
         private void Form1_Load(object sender, EventArgs e)
         {
             ftp = new FtpHelper(compal_ftp_uri, compal_ftp_username, compal_ftp_psd);
-            
+            ftp_mov = new FtpHelper(compal_ftp_uri_mov, compal_ftp_username_mov, compal_ftp_psd_mov);
         }
         public enum Definition
         {
@@ -571,20 +575,100 @@ namespace BackstageTask_Second
 
         private void timer6_Tick(object sender, EventArgs e)
         {
-            string sql = "select * from FILEMANAGE where filetype='CustomsFile'  and valid IS NULL  and ROWNUM<=10";
-            DataTable dt_filemanage=DBMgrMov.GetDataTable(sql);
-            foreach (DataRow dr in dt_filemanage.Rows)
-            {
-              string fileid = string.Empty;
-              string filemanageid = string.Empty;
-              fileid = dr["fileid"].ToString();
-              filemanageid = dr["filemanageid"].ToString();
-              DataTable dt_fileitem = DBMgrMov.GetDataTable("select * from fileitem where id="+fileid);
-              DataTable dt_filemanagedetail = DBMgrMov.GetDataTable("select * from filemanagedetail where id=" + filemanageid);
-             
-              
+            if (!working6)
+            { 
+                string sql = "select * from FILEMANAGE where filetype='CustomsFile'  and valid IS NULL  and ROWNUM<=10";
+                DataTable dt_filemanage=DBMgrMov.GetDataTable(sql);
+                foreach (DataRow dr in dt_filemanage.Rows)
+                {
+                    string fileid = string.Empty;
+                    string filemanageid = string.Empty;
+                    fileid = dr["fileid"].ToString();
+                    filemanageid = dr["filemanageid"].ToString();
+                    DataTable dt_fileitem = DBMgrMov.GetDataTable("select * from fileitem where id="+fileid);
+                    DataTable dt_filemanagedetail = DBMgrMov.GetDataTable("select * from filemanagedetail where id=" + filemanageid);
+                    if(dt_fileitem.Rows.Count!=0)
+                    {
+                        string fileitemPath =  dt_fileitem.Rows[0]["path"].ToString().Trim();
+                        string fileitemName=dt_fileitem.Rows[0]["name"].ToString().Trim();
+                        if (!Directory.Exists(direc_pdf + @"\item\"+fileitemPath))
+                        {
+                            Directory.CreateDirectory(direc_pdf + @"\item\"+fileitemPath);
+                            ftp.DownloadFile(fileitemPath + fileitemName, direc_pdf + @"\temp\"+fileitemPath + fileitemName); 
+                        }
+                        //更新数据附近数据表
+                       // string sqlupdate = "insert into list_attachment (id,filename,originalname,uploadtime,uploaduserid,filetype,sizes,isupload,filepages) "
+                         //                + "values(null,'"+direc_pdf + @"\temp\"+fileitemPath + fileitemName+"',sysdate,')";
+                        string sqlupdate = "insert into list_attachment (id,filename,originalname,uploadtime,uploaduserid,filetype,sizes,isupload,filepages) "
+                                         + "values  (List_Attachment_Id.Nextval,'{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')";
+                      
+
+                    }
+                    if (dt_filemanagedetail.Rows.Count!=0)
+                    {
+                        foreach (DataRow dr_filemanagedetail in dt_filemanagedetail.Rows)
+                        {
+                         string filename=dr_filemanagedetail["filename"].ToString().Replace(@"D:\RW\Files\AppFiles\Portal\","");
+                         string path=filename.Substring(0,filename.IndexOf(@"\"));
+                         if (!Directory.Exists(direc_pdf + @"\detail\" + path))
+                            {
+                                Directory.CreateDirectory(direc_pdf + @"\detail\" + path);
+                                ftp.DownloadFile(filename, direc_pdf + @"\detail\" + path + filename); 
+                            }
+                        }   
+                        //更新详细文件表
+                    }
+                }
             }
 
+        }
+
+        private void timer7_Tick(object sender, EventArgs e)
+        {
+            PdfReader pdfReader;
+            
+            if (!working7)
+            {
+                working7 = true;
+                try
+                {
+                    string sql = "select l.*,o.filepages as pages,o.code from list_attachment l left join list_order o on l.ORDERCODE=o.CODE WHERE l.splitstatus=1 and l.filepages is null and  ROWNUM <=10";
+                        DataTable dt = DBMgr.GetDataTable(sql);
+                        if (dt.Rows.Count != 0)
+                        {
+                            foreach (DataRow dr in dt.Rows)
+                            {
+                                string filename = dr["FILENAME"].ToString();
+                                int id = Convert.ToInt32(dr["ID"].ToString());
+                                pdfReader = new PdfReader(@"d:\ftpserver\" + filename);
+                                int totalPages = pdfReader.NumberOfPages;
+                                pdfReader.Close();
+                                string updatesql = "update list_attachment set FILEPAGES=" + totalPages + " where id=" + id;
+                                if (dr["pages"] == null && dr["code"] != null)
+                                {
+                                    DBMgr.ExecuteNonQuery("update list_order set FILEPAGES=" + totalPages + " where CODE='" + dr["code"].ToString() + "'");
+                                }
+                            }
+                        }
+                      
+                }
+                catch (Exception ex)
+                {
+                    this.button7.Text = ex.Message;
+                    working7 = false;
+                    
+                    
+                }
+                working7 = false;
+          }
+           
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            this.timer7.Enabled = true;
+            this.button7.Text = "运行中";
+            this.button7.Enabled = false;
         }
     }
 }
