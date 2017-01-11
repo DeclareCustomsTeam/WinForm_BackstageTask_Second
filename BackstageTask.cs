@@ -573,52 +573,146 @@ namespace BackstageTask_Second
             this.button6.Enabled = false;
         }
 
+        #region
         private void timer6_Tick(object sender, EventArgs e)
         {
             if (!working6)
-            { 
-                string sql = "select * from FILEMANAGE where filetype='CustomsFile'  and valid IS NULL  and ROWNUM<=10";
-                DataTable dt_filemanage=DBMgrMov.GetDataTable(sql);
-                foreach (DataRow dr in dt_filemanage.Rows)
+            {
+                working6 = true;
+                try
                 {
-                    string fileid = string.Empty;
-                    string filemanageid = string.Empty;
-                    fileid = dr["fileid"].ToString();
-                    filemanageid = dr["filemanageid"].ToString();
-                    DataTable dt_fileitem = DBMgrMov.GetDataTable("select * from fileitem where id="+fileid);
-                    DataTable dt_filemanagedetail = DBMgrMov.GetDataTable("select * from filemanagedetail where id=" + filemanageid);
-                    if(dt_fileitem.Rows.Count!=0)
+                    PdfReader pdfReader;
+                    string sql = "select * from FILEMANAGE where filetype='CustomsFile' and valid IS NULL and filename is null and createtime > to_date('2015-12-31 23:59:59','yyyy-mm-dd hh24:mi:ss') and ROWNUM<=100";
+                    DataTable dt_filemanage = DBMgrMov.GetDataTable(sql);
+                    string ordercode = string.Empty;
+                    //int attachmentid=2;
+                    foreach (DataRow dr in dt_filemanage.Rows)
                     {
-                        string fileitemPath =  dt_fileitem.Rows[0]["path"].ToString().Trim();
-                        string fileitemName=dt_fileitem.Rows[0]["name"].ToString().Trim();
-                        if (!Directory.Exists(direc_pdf + @"\item\"+fileitemPath))
+                        string fileid = string.Empty;
+                        string filemanageid = string.Empty;
+                        ordercode = dr["businessno"].ToString();
+                        DataTable dt_list = DBMgr.GetDataTable("select * from list_attachment where ORDERCODE='" + ordercode + "'");
+                        if (dt_list.Rows.Count == 0)
                         {
-                            Directory.CreateDirectory(direc_pdf + @"\item\"+fileitemPath);
-                            ftp.DownloadFile(fileitemPath + fileitemName, direc_pdf + @"\temp\"+fileitemPath + fileitemName); 
-                        }
-                        //更新数据附近数据表
-                       // string sqlupdate = "insert into list_attachment (id,filename,originalname,uploadtime,uploaduserid,filetype,sizes,isupload,filepages) "
-                         //                + "values(null,'"+direc_pdf + @"\temp\"+fileitemPath + fileitemName+"',sysdate,')";
-                        string sqlupdate = "insert into list_attachment (id,filename,originalname,uploadtime,uploaduserid,filetype,sizes,isupload,filepages) "
-                                         + "values  (List_Attachment_Id.Nextval,'{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')";
-                      
-
-                    }
-                    if (dt_filemanagedetail.Rows.Count!=0)
-                    {
-                        foreach (DataRow dr_filemanagedetail in dt_filemanagedetail.Rows)
-                        {
-                         string filename=dr_filemanagedetail["filename"].ToString().Replace(@"D:\RW\Files\AppFiles\Portal\","");
-                         string path=filename.Substring(0,filename.IndexOf(@"\"));
-                         if (!Directory.Exists(direc_pdf + @"\detail\" + path))
+                            fileid = dr["fileid"].ToString();
+                            filemanageid = dr["id"].ToString();
+                            DataTable dt_fileitem = DBMgrMov.GetDataTable("select * from fileitem where id='" + fileid + "'");
+                            DataTable dt_filemanagedetail = DBMgrMov.GetDataTable("select * from filemanagedetail where id='" + filemanageid + "'");
+                            if (dt_fileitem.Rows.Count != 0)
                             {
-                                Directory.CreateDirectory(direc_pdf + @"\detail\" + path);
-                                ftp.DownloadFile(filename, direc_pdf + @"\detail\" + path + filename); 
+                                string fileitemPath = dt_fileitem.Rows[0]["path"].ToString().Trim();
+                                string fileitemName = dt_fileitem.Rows[0]["name"].ToString().Trim();
+                                string item_id = dt_fileitem.Rows[0]["id"].ToString().Trim();
+
+                                //if (!Directory.Exists(direc_pdf + @"\item\"+fileitemPath))
+                                //{
+                                //    Directory.CreateDirectory(direc_pdf + @"\item\"+fileitemPath); 
+                                //}
+                                //bool success = ftp.DownloadFile(fileitemPath + fileitemName, direc_pdf + @"\item\" + fileitemPath + fileitemName);
+                                string filename = @"/item/" + fileitemPath + "/" + fileitemName;
+                                string originalname = fileitemName;
+                                int filetype = 44;
+                                int sizes = Convert.ToInt32(dt_fileitem.Rows[0]["filesize"].ToString());
+                                int isupload = 1;
+                                string filesuffix = dt_fileitem.Rows[0]["extname"].ToString();
+                                string filetypename = "订单文件";
+                                int splitstatus = 0;
+                                if (dt_filemanagedetail.Rows.Count != 0)
+                                {
+                                    splitstatus = 1;
+                                }
+                                string url = "http://172.20.70.98:7003/Document/" + fileitemPath + "/" + item_id + "_" + fileitemName;
+                                int filepages = 0;
+
+                                System.Uri uri = new Uri(url);
+                                //pdfReader = new PdfReader(@"d:\ftpserver\" + filename);
+                                pdfReader = new PdfReader(uri);
+                                filepages = pdfReader.NumberOfPages;
+                                pdfReader.Close();
+
+
+                                //更新数据附件数据表
+                                string sqlupdate = "insert into list_attachment (filename,originalname,uploadtime,filetype,sizes,ordercode,filesuffix,filetypename,splitstatus,isupload,filepages,ordercount) "
+                                                 + "values  ('{0}','{1}',sysdate,'{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',0)";
+                                sqlupdate = string.Format(sqlupdate, filename, originalname, filetype, sizes, ordercode, filesuffix, filetypename, splitstatus, isupload, filepages);
+                                int updateSuccess = DBMgr.ExecuteNonQuery(sqlupdate);
+
+                                if (updateSuccess == 1)
+                                {
+                                    DBMgrMov.ExecuteNonQuery("update FILEMANAGE  set filename='Y' where businessno='" + ordercode + "'");
+                                }
+                                //获取attachmentid
+                                // DataTable dt_fileitem_new = DBMgrMov.GetDataTable("select id from list_attachment where ordercode='" + ordercode + "'");
+                                //if (dt_fileitem_new.Rows.Count > 1)
+                                //{
+                                //    attachmentid = Convert.ToInt32(dt_fileitem_new.Rows[0]["id"].ToString());
+                                //}
+
                             }
-                        }   
-                        //更新详细文件表
+                        }
+                        //if (dt_filemanagedetail.Rows.Count!=0)
+                        //{
+
+                        //    foreach (DataRow dr_filemanagedetail in dt_filemanagedetail.Rows)
+                        //    {
+                        //     string filename=dr_filemanagedetail["filename"].ToString().Replace(@"D:\RW\Files\AppFiles\Portal\","");
+                        //     string path=filename.Substring(0,filename.IndexOf(@"\")+1);
+                        //     //if (!Directory.Exists(direc_pdf + @"\detail\" + path))
+                        //     //   {
+                        //     //       Directory.CreateDirectory(direc_pdf + @"\detail\" + path);   
+                        //     //   }
+                        //     //bool success=ftp.DownloadFile(filename, direc_pdf + @"\detail\" + filename);
+                        //         string sourcefilename = @"\detail\" + filename;
+                        //         string filename_a=filename.Substring(filename.IndexOf(@"\") + 1, filename.Length);
+
+                        //         int filetypeid=0;
+                        //         string subtypename=dr_filemanagedetail["subtypename"].ToString();
+                        //         switch (subtypename)
+                        //        {
+                        //            case "箱单":
+                        //            filetypeid=52;
+                        //            break;
+                        //            case "其他1":
+                        //            filetypeid=54;
+                        //            break;
+                        //            case "货物清单":
+                        //            filetypeid=101;
+                        //            break;
+                        //            case "提运单":
+                        //            filetypeid=49;
+                        //            break;
+                        //            case "委托协议":
+                        //            filetypeid = 53;
+                        //            break;
+                        //            case "发票":
+                        //            filetypeid=51;
+                        //            break;
+                        //            case "合同":
+                        //            filetypeid=50;
+                        //            break;
+                        //        }
+                        //         string pages = dr_filemanagedetail["pages"].ToString();
+                        //         string spliteusername = dr_filemanagedetail["spliteusername"].ToString();
+                        //         string splitetime = dr_filemanagedetail["splitetime"].ToString();
+                        //            //更新详细文件表
+                        //         string sqlupdate = "insert into list_attachmentdetail (sourcefilename,filename,attachmentid,filetypeid,splitetime,ordercode,pages,spliteusername) "
+                        //                          + "values  ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')";
+                        //         sqlupdate = string.Format(sqlupdate, sourcefilename, filename_a, attachmentid, filetypeid,splitetime,ordercode,pages,spliteusername);
+                        //         DBMgrMov.ExecuteNonQuery(sqlupdate);
+
+                        //    }   
+
+                        //}
                     }
                 }
+                catch (Exception ex)
+                {
+
+                    this.button6.Text = ex.Message;
+                     working6 = false;
+                }
+               
+                working6 = false;
             }
 
         }
@@ -632,7 +726,7 @@ namespace BackstageTask_Second
                 working7 = true;
                 try
                 {
-                    string sql = "select l.*,o.filepages as pages,o.code from list_attachment l left join list_order o on l.ORDERCODE=o.CODE WHERE l.splitstatus=1 and l.filepages is null and  ROWNUM <=10";
+                    string sql = "select l.*,o.filepages as pages,o.code from list_attachment l left join list_order o on l.ORDERCODE=o.CODE WHERE l.splitstatus=1 and l.filepages is null and  ROWNUM <=100";
                         DataTable dt = DBMgr.GetDataTable(sql);
                         if (dt.Rows.Count != 0)
                         {
@@ -643,7 +737,8 @@ namespace BackstageTask_Second
                                 pdfReader = new PdfReader(@"d:\ftpserver\" + filename);
                                 int totalPages = pdfReader.NumberOfPages;
                                 pdfReader.Close();
-                                string updatesql = "update list_attachment set FILEPAGES=" + totalPages + " where id=" + id;
+
+                                DBMgr.ExecuteNonQuery("update list_attachment set FILEPAGES=" + totalPages + " where id=" + id);
                                 if (dr["pages"] == null && dr["code"] != null)
                                 {
                                     DBMgr.ExecuteNonQuery("update list_order set FILEPAGES=" + totalPages + " where CODE='" + dr["code"].ToString() + "'");
@@ -672,3 +767,4 @@ namespace BackstageTask_Second
         }
     }
 }
+        #endregion

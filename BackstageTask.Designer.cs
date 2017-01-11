@@ -174,7 +174,7 @@
             // 
             // timer6
             // 
-            this.timer6.Interval = 20000;
+            this.timer6.Interval = 5000;
             this.timer6.Tick += new System.EventHandler(this.timer6_Tick);
             // 
             // label6
@@ -217,6 +217,7 @@
             // 
             // timer7
             // 
+            this.timer7.Interval = 5000;
             this.timer7.Tick += new System.EventHandler(this.timer7_Tick);
             // 
             // BackstageTask
