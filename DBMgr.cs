@@ -17,10 +17,9 @@ namespace BackstageTask_Second
         public static DataSet GetDataSet(string sql)
         {
             DataSet ds = new DataSet();
-            OracleConnection orclCon = null;
             try
             {
-                using (orclCon = new OracleConnection(ConnectionString))
+                using (OracleConnection orclCon = new OracleConnection(ConnectionString))
                 {
                     DbCommand oc = orclCon.CreateCommand();
                     oc.CommandText = sql;
@@ -37,10 +36,6 @@ namespace BackstageTask_Second
             catch (Exception e)
             {
                 //log.Error(e.Message + e.StackTrace);
-            }
-            finally
-            {
-                orclCon.Close();
             }
             return ds;
         }
@@ -48,10 +43,9 @@ namespace BackstageTask_Second
         public static DataTable GetDataTable(string sql)
         {
             DataSet ds = new DataSet();
-            OracleConnection orclCon = null;
             try
             {
-                using (orclCon = new OracleConnection(ConnectionString))
+                using (OracleConnection orclCon = new OracleConnection(ConnectionString))
                 {
                     DbCommand oc = orclCon.CreateCommand();
                     oc.CommandText = sql;
@@ -69,18 +63,13 @@ namespace BackstageTask_Second
             {
                 //log.Error(e.Message + e.StackTrace);
             }
-            finally
-            {
-                orclCon.Close();
-            }
             return ds.Tables[0];
         }
 
         public static int ExecuteNonQuery(string sql)
         {
             int retcount = -1;
-            OracleConnection orclCon = null;
-            using (orclCon = new OracleConnection(ConnectionString))
+            using (OracleConnection orclCon = new OracleConnection(ConnectionString))
             {
                 OracleCommand oc = new OracleCommand(sql, orclCon);
                 if (orclCon.State.ToString().Equals("Open"))
