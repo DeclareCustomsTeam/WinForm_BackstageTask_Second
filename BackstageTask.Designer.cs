@@ -51,20 +51,11 @@
             this.button7 = new System.Windows.Forms.Button();
             this.timer7 = new System.Windows.Forms.Timer(this.components);
             this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
             this.timer8 = new System.Windows.Forms.Timer(this.components);
-            this.timer9 = new System.Windows.Forms.Timer(this.components);
-            this.label13 = new System.Windows.Forms.Label();
-            this.button13 = new System.Windows.Forms.Button();
-            this.timer13 = new System.Windows.Forms.Timer(this.components);
             this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
-            this.button11 = new System.Windows.Forms.Button();
             this.timer10 = new System.Windows.Forms.Timer(this.components);
-            this.timer11 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // button1
@@ -244,15 +235,6 @@
             this.label8.TabIndex = 12;
             this.label8.Text = "8 文件转移>=2016-7-1\r\nand<2016-8-1";
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 320);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(125, 24);
-            this.label9.TabIndex = 13;
-            this.label9.Text = "9 文件转移>=2016-4-1\r\nand<2016-5-1";
-            // 
             // button8
             // 
             this.button8.Location = new System.Drawing.Point(183, 275);
@@ -263,71 +245,23 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
-            // button9
-            // 
-            this.button9.Location = new System.Drawing.Point(183, 315);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(577, 22);
-            this.button9.TabIndex = 16;
-            this.button9.Text = "启动";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
-            // 
             // timer8
             // 
             this.timer8.Interval = 1500;
             this.timer8.Tick += new System.EventHandler(this.timer8_Tick);
             // 
-            // timer9
-            // 
-            this.timer9.Interval = 1500;
-            this.timer9.Tick += new System.EventHandler(this.timer9_Tick);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 450);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(131, 24);
-            this.label13.TabIndex = 22;
-            this.label13.Text = "13 文件转移>=2016-5-1\r\nand<2016-6-1";
-            // 
-            // button13
-            // 
-            this.button13.Location = new System.Drawing.Point(183, 445);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(577, 22);
-            this.button13.TabIndex = 24;
-            this.button13.Text = "启动";
-            this.button13.UseVisualStyleBackColor = true;
-            this.button13.Click += new System.EventHandler(this.button13_Click);
-            // 
-            // timer13
-            // 
-            this.timer13.Interval = 1500;
-            this.timer13.Tick += new System.EventHandler(this.timer13_Tick);
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 371);
+            this.label10.Location = new System.Drawing.Point(12, 324);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(143, 24);
             this.label10.TabIndex = 25;
             this.label10.Text = "10 文件转移>=2016-11-10\r\nand<2016-11-20";
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(12, 413);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(143, 12);
-            this.label11.TabIndex = 26;
-            this.label11.Text = "11 文件转移>=2016-11-20";
-            // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(183, 366);
+            this.button10.Location = new System.Drawing.Point(183, 319);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(577, 22);
             this.button10.TabIndex = 27;
@@ -335,40 +269,19 @@
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
-            // button11
-            // 
-            this.button11.Location = new System.Drawing.Point(183, 408);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(577, 22);
-            this.button11.TabIndex = 28;
-            this.button11.Text = "启动";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
-            // 
             // timer10
             // 
             this.timer10.Interval = 1500;
             this.timer10.Tick += new System.EventHandler(this.timer10_Tick);
-            // 
-            // timer11
-            // 
-            this.timer11.Interval = 1500;
-            this.timer11.Tick += new System.EventHandler(this.timer11_Tick);
             // 
             // BackstageTask
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(794, 616);
-            this.Controls.Add(this.button11);
             this.Controls.Add(this.button10);
-            this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.button13);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.button9);
             this.Controls.Add(this.button8);
-            this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.label7);
@@ -416,20 +329,11 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Timer timer7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Timer timer8;
-        private System.Windows.Forms.Timer timer9;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Button button13;
-        private System.Windows.Forms.Timer timer13;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Timer timer10;
-        private System.Windows.Forms.Timer timer11;
     }
 }
 
