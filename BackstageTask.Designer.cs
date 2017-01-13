@@ -53,9 +53,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.timer8 = new System.Windows.Forms.Timer(this.components);
-            this.label10 = new System.Windows.Forms.Label();
-            this.button10 = new System.Windows.Forms.Button();
-            this.timer10 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // button1
@@ -90,7 +87,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 108);
+            this.label2.Location = new System.Drawing.Point(12, 123);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(107, 12);
             this.label2.TabIndex = 1;
@@ -99,7 +96,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 75);
+            this.label3.Location = new System.Drawing.Point(12, 82);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(161, 12);
             this.label3.TabIndex = 1;
@@ -112,7 +109,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(183, 65);
+            this.button2.Location = new System.Drawing.Point(183, 72);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(577, 22);
             this.button2.TabIndex = 2;
@@ -122,7 +119,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(183, 98);
+            this.button3.Location = new System.Drawing.Point(183, 113);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(577, 22);
             this.button3.TabIndex = 3;
@@ -133,7 +130,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 140);
+            this.label4.Location = new System.Drawing.Point(12, 162);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(65, 12);
             this.label4.TabIndex = 4;
@@ -141,7 +138,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(183, 130);
+            this.button4.Location = new System.Drawing.Point(183, 152);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(577, 22);
             this.button4.TabIndex = 5;
@@ -157,7 +154,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 171);
+            this.label5.Location = new System.Drawing.Point(12, 202);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(65, 12);
             this.label5.TabIndex = 6;
@@ -165,7 +162,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(183, 161);
+            this.button5.Location = new System.Drawing.Point(183, 192);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(577, 22);
             this.button5.TabIndex = 7;
@@ -186,7 +183,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 202);
+            this.label6.Location = new System.Drawing.Point(12, 242);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(131, 24);
             this.label6.TabIndex = 8;
@@ -194,7 +191,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(183, 197);
+            this.button6.Location = new System.Drawing.Point(183, 237);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(577, 22);
             this.button6.TabIndex = 9;
@@ -205,7 +202,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 242);
+            this.label7.Location = new System.Drawing.Point(12, 292);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(89, 12);
             this.label7.TabIndex = 10;
@@ -213,7 +210,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(183, 237);
+            this.button7.Location = new System.Drawing.Point(183, 287);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(577, 22);
             this.button7.TabIndex = 11;
@@ -229,7 +226,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 273);
+            this.label8.Location = new System.Drawing.Point(12, 335);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(125, 24);
             this.label8.TabIndex = 12;
@@ -237,7 +234,7 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(183, 275);
+            this.button8.Location = new System.Drawing.Point(183, 337);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(577, 22);
             this.button8.TabIndex = 15;
@@ -250,37 +247,11 @@
             this.timer8.Interval = 1500;
             this.timer8.Tick += new System.EventHandler(this.timer8_Tick);
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 324);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(143, 24);
-            this.label10.TabIndex = 25;
-            this.label10.Text = "10 文件转移>=2016-11-10\r\nand<2016-11-20";
-            // 
-            // button10
-            // 
-            this.button10.Location = new System.Drawing.Point(183, 319);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(577, 22);
-            this.button10.TabIndex = 27;
-            this.button10.Text = "启动";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
-            // 
-            // timer10
-            // 
-            this.timer10.Interval = 1500;
-            this.timer10.Tick += new System.EventHandler(this.timer10_Tick);
-            // 
             // BackstageTask
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(794, 616);
-            this.Controls.Add(this.button10);
-            this.Controls.Add(this.label10);
+            this.ClientSize = new System.Drawing.Size(789, 554);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.button7);
@@ -331,9 +302,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Timer timer8;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Timer timer10;
     }
 }
 
