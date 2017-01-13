@@ -50,16 +50,13 @@
             this.label7 = new System.Windows.Forms.Label();
             this.button7 = new System.Windows.Forms.Button();
             this.timer7 = new System.Windows.Forms.Timer(this.components);
-            this.label8 = new System.Windows.Forms.Label();
-            this.button8 = new System.Windows.Forms.Button();
-            this.timer8 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(183, 34);
+            this.button1.Location = new System.Drawing.Point(183, 31);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(577, 20);
+            this.button1.Size = new System.Drawing.Size(577, 23);
             this.button1.TabIndex = 0;
             this.button1.Text = "启动";
             this.button1.UseVisualStyleBackColor = true;
@@ -191,6 +188,7 @@
             // 
             // button6
             // 
+            this.button6.Enabled = false;
             this.button6.Location = new System.Drawing.Point(183, 237);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(577, 22);
@@ -210,6 +208,7 @@
             // 
             // button7
             // 
+            this.button7.Enabled = false;
             this.button7.Location = new System.Drawing.Point(183, 287);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(577, 22);
@@ -223,37 +222,11 @@
             this.timer7.Interval = 5000;
             this.timer7.Tick += new System.EventHandler(this.timer7_Tick);
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 335);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(125, 24);
-            this.label8.TabIndex = 12;
-            this.label8.Text = "8 文件转移>=2016-7-1\r\nand<2016-8-1";
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(183, 337);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(577, 22);
-            this.button8.TabIndex = 15;
-            this.button8.Text = "启动";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // timer8
-            // 
-            this.timer8.Interval = 1500;
-            this.timer8.Tick += new System.EventHandler(this.timer8_Tick);
-            // 
             // BackstageTask
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 554);
-            this.Controls.Add(this.button8);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.button6);
@@ -299,9 +272,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Timer timer7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Timer timer8;
     }
 }
 

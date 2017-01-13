@@ -30,7 +30,7 @@ namespace BackstageTask_Second
         bool working4 = false;
         bool working5 = false;
         bool working6 = false;
-        bool working7 = false; bool working8 = false;  
+        bool working7 = false; 
 
         string barcode = string.Empty;
         string sql = string.Empty;
@@ -763,79 +763,6 @@ namespace BackstageTask_Second
                 working7 = false;
             }
 
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            this.timer8.Enabled = true;
-            this.button8.Text = "运行中";
-            this.button8.Enabled = false;
-        }
-
-        private void timer8_Tick(object sender, EventArgs e)
-        {
-            if (!working8)
-            {
-                working8 = true;
-                try
-                {
-                    PdfReader pdfReader;
-                    string sql = @"select * from FILEMANAGE where businessno is not null and filetype='CustomsFile' and valid IS NULL and filename is null 
-                                and createtime >= to_date('2016-7-1 0:00:00','yyyy-mm-dd hh24:mi:ss') and createtime < to_date('2016-8-1 0:00:00','yyyy-mm-dd hh24:mi:ss') 
-                                and ROWNUM<=5";
-                    DataTable dt_filemanage = DBMgrMov.GetDataTable(sql);
-                    string ordercode = string.Empty;
-                    foreach (DataRow dr in dt_filemanage.Rows)
-                    {
-                        string fileid = string.Empty;
-                        string filemanageid = string.Empty;
-                        ordercode = dr["businessno"].ToString();
-                        DataTable dt_list = DBMgr.GetDataTable("select * from list_attachment where ORDERCODE='" + ordercode + "' and filetype=44");
-                        if (dt_list.Rows.Count == 0)
-                        {
-                            fileid = dr["fileid"].ToString();
-                            filemanageid = dr["id"].ToString();
-                            DataTable dt_fileitem = DBMgrMov.GetDataTable("select * from fileitem where id='" + fileid + "'");
-                            if (dt_fileitem.Rows.Count != 0)
-                            {
-                                string fileitemPath = dt_fileitem.Rows[0]["path"].ToString().Trim();
-                                string fileitemName = dt_fileitem.Rows[0]["name"].ToString().Trim();
-                                string item_id = dt_fileitem.Rows[0]["id"].ToString().Trim();
-                                string filename = @"/item/" + fileitemPath + "/" + fileitemName;
-                                string originalname = fileitemName;
-                                int filetype = 44;
-                                int sizes = Convert.ToInt32(dt_fileitem.Rows[0]["filesize"].ToString());
-                                int isupload = 1;
-                                string filesuffix = dt_fileitem.Rows[0]["extname"].ToString();
-                                string filetypename = "订单文件";
-                                int splitstatus = 1;
-                                string url = "http://172.20.70.98:7003/Document/" + fileitemPath + "/" + item_id + "_" + fileitemName;
-                                int filepages = 0;
-
-                                System.Uri uri = new Uri(url);
-                                pdfReader = new PdfReader(uri);
-                                filepages = pdfReader.NumberOfPages;
-                                pdfReader.Close();
-                                //更新数据附件数据表
-                                string sqlupdate = "insert into list_attachment (filename,originalname,filetype,sizes,ordercode,filesuffix,filetypename,splitstatus,isupload,filepages,uploadtime,ordercount) "
-                                                 + "values  ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',to_date('" + dr["createtime"].ToString() + "','yyyy-MM-dd HH24:mi:ss'),0)";
-                                sqlupdate = string.Format(sqlupdate, filename, originalname, filetype, sizes, ordercode, filesuffix, filetypename, splitstatus, isupload, filepages);
-                                int updateSuccess = DBMgr.ExecuteNonQuery(sqlupdate);
-
-                            }
-                        }
-                        DBMgrMov.ExecuteNonQuery("update FILEMANAGE  set filename='Y' where businessno='" + ordercode + "' and filetype='CustomsFile' and valid IS NULL and filename is null");
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    this.button8.Text = ex.Message;
-                    working8 = false;
-                }
-
-                working8 = false;
-            }
         }
         
     }
