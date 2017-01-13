@@ -59,10 +59,10 @@ namespace BackstageTask_Second
                 working = true;
                 try
                 {
-                    sql = @"select t.id,a.filename,a.filesuffix from (select attachmentid,ID from pdfshrinklog t  where iscompress=0  
-                          order by ID desc) t left join List_Attachment a on t.attachmentid=a.id and rownum=1";
+                    sql = @"select t.attachmentid,t.ID,a.filename,a.filesuffix from pdfshrinklog t   
+                          left join List_Attachment a on t.attachmentid=a.id  where t.iscompress=0 order by ID desc";
                     DataTable dt = DBMgr.GetDataTable(sql);
-                    if (dt.Rows.Count > 0)
+                    if (dt.Rows.Count > 0)//如果一次性送多个文件进入压缩程序，会有错误提示,所以每次只送一条记录
                     {
                         DataRow dr = dt.Rows[0];
                         if (File.Exists(ConfigurationManager.AppSettings["filedir"] + dr["FILENAME"]))//先判断原始文件存在
@@ -406,7 +406,7 @@ namespace BackstageTask_Second
             catch (Exception ex)
             {
                 this.button3.Text = "database_" + ex.Message;
-                content = false; 
+                content = false;
             }
             return content;
         }
@@ -585,7 +585,7 @@ namespace BackstageTask_Second
                     PdfReader pdfReader;
                     string sql = @"select * from FILEMANAGE where businessno is not null and filetype='CustomsFile' and valid IS NULL and filename is null 
                             and createtime >= to_date('2016-10-1 0:00:00','yyyy-mm-dd hh24:mi:ss') and ROWNUM<=5";
-                            
+
                     DataTable dt_filemanage = DBMgrMov.GetDataTable(sql);
                     string ordercode = string.Empty;
                     //int attachmentid=2;and createtime > to_date('2015-12-31 23:59:59','yyyy-mm-dd hh24:mi:ss') and ROWNUM<=5";
@@ -639,7 +639,7 @@ namespace BackstageTask_Second
                                                  + "values  ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}',to_date('" + dr["createtime"].ToString() + "','yyyy-MM-dd HH24:mi:ss'),0)";
                                 sqlupdate = string.Format(sqlupdate, filename, originalname, filetype, sizes, ordercode, filesuffix, filetypename, splitstatus, isupload, filepages);
                                 int updateSuccess = DBMgr.ExecuteNonQuery(sqlupdate);
-                                
+
                                 //获取attachmentid
                                 // DataTable dt_fileitem_new = DBMgrMov.GetDataTable("select id from list_attachment where ordercode='" + ordercode + "'");
                                 //if (dt_fileitem_new.Rows.Count > 1)
@@ -709,9 +709,9 @@ namespace BackstageTask_Second
                 {
 
                     this.button6.Text = ex.Message;
-                     working6 = false;
+                    working6 = false;
                 }
-               
+
                 working6 = false;
             }
 
@@ -726,43 +726,43 @@ namespace BackstageTask_Second
         private void timer7_Tick(object sender, EventArgs e)
         {
             PdfReader pdfReader;
-            
+
             if (!working7)
             {
                 working7 = true;
                 try
                 {
                     string sql = "select l.*,o.filepages as pages,o.code from list_attachment l left join list_order o on l.ORDERCODE=o.CODE WHERE l.splitstatus=1 and l.filepages is null and  ROWNUM <=100";
-                        DataTable dt = DBMgr.GetDataTable(sql);
-                        if (dt.Rows.Count != 0)
+                    DataTable dt = DBMgr.GetDataTable(sql);
+                    if (dt.Rows.Count != 0)
+                    {
+                        foreach (DataRow dr in dt.Rows)
                         {
-                            foreach (DataRow dr in dt.Rows)
-                            {
-                                string filename = dr["FILENAME"].ToString();
-                                int id = Convert.ToInt32(dr["ID"].ToString());
-                                pdfReader = new PdfReader(@"d:\ftpserver\" + filename);
-                                int totalPages = pdfReader.NumberOfPages;
-                                pdfReader.Close();
+                            string filename = dr["FILENAME"].ToString();
+                            int id = Convert.ToInt32(dr["ID"].ToString());
+                            pdfReader = new PdfReader(@"d:\ftpserver\" + filename);
+                            int totalPages = pdfReader.NumberOfPages;
+                            pdfReader.Close();
 
-                                DBMgr.ExecuteNonQuery("update list_attachment set FILEPAGES=" + totalPages + " where id=" + id);
-                                if (dr["pages"] == null && dr["code"] != null)
-                                {
-                                    DBMgr.ExecuteNonQuery("update list_order set FILEPAGES=" + totalPages + " where CODE='" + dr["code"].ToString() + "'");
-                                }
+                            DBMgr.ExecuteNonQuery("update list_attachment set FILEPAGES=" + totalPages + " where id=" + id);
+                            if (dr["pages"] == null && dr["code"] != null)
+                            {
+                                DBMgr.ExecuteNonQuery("update list_order set FILEPAGES=" + totalPages + " where CODE='" + dr["code"].ToString() + "'");
                             }
                         }
-                      
+                    }
+
                 }
                 catch (Exception ex)
                 {
                     this.button7.Text = ex.Message;
                     working7 = false;
-                    
-                    
+
+
                 }
                 working7 = false;
-          }
-           
+            }
+
         }
 
         private void button8_Click(object sender, EventArgs e)
