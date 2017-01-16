@@ -16,7 +16,16 @@ namespace BackstageTask_Second
 
         private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
         {
-            return ConnectionMultiplexer.Connect(constr);
+            ConfigurationOptions co = new ConfigurationOptions()
+            {
+                SyncTimeout = 500000,
+                EndPoints =
+            {
+                {constr,6379 }
+            },
+                AbortOnConnectFail = false // this prevents that error
+            };
+            return ConnectionMultiplexer.Connect(co);
 
         });
 
