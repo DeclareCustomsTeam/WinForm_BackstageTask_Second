@@ -30,7 +30,7 @@ namespace BackstageTask_Second
         bool working4 = false;
         bool working5 = false;
         bool working6 = false;
-        bool working7 = false; 
+        bool working7 = false;
 
         string barcode = string.Empty;
         string sql = string.Empty;
@@ -211,95 +211,95 @@ namespace BackstageTask_Second
                 {
                     string destination = DateTime.Now.ToString("yyyy-MM-dd");
                     List<FileStruct> fis = ftp.GetFileAndDirectoryList(@"\");
-                    if (fis.Count > 0)
+                    foreach (FileStruct fs in fis)
                     {
-                        foreach (FileStruct fs in fis)
+                        int seconds = Convert.ToInt32((DateTime.Now - fs.UpdateTime.Value).TotalSeconds);
+                        #region 处理文件开始
+                        if (!fs.IsDirectory && fs.Size > 0 && seconds > 10)//有时候文件还在生成中，故加上时间范围限制
                         {
-                            int seconds = Convert.ToInt32((DateTime.Now - fs.UpdateTime.Value).TotalSeconds);
-                            if (!fs.IsDirectory && fs.Size > 0 && seconds > 10)//有时候文件还在生成中，故加上时间范围限制
+                            //提取合同协议号 如果无_，则直接将文件主名称作为合同协议号,如果有,则截取
+                            int start = fs.Name.IndexOf("_");
+                            string contractno = string.Empty;
+                            if (start >= 0)
                             {
-                                //提取合同协议号 如果无_，则直接将文件主名称作为合同协议号,如果有,则截取
-                                int start = fs.Name.IndexOf("_");
-                                string contractno = string.Empty;
+                                contractno = fs.Name.Substring(0, start);
+                            }
+                            else
+                            {
+                                start = fs.Name.IndexOf("-");//有些文件比较特殊是中杠
                                 if (start >= 0)
                                 {
                                     contractno = fs.Name.Substring(0, start);
                                 }
                                 else
                                 {
-                                    start = fs.Name.IndexOf("-");//有些文件比较特殊是中杠
-                                    if (start >= 0)
-                                    {
-                                        contractno = fs.Name.Substring(0, start);
-                                    }
-                                    else
-                                    {
-                                        start = fs.Name.IndexOf(".");
-                                        contractno = fs.Name.Substring(0, start);
-                                    }
+                                    start = fs.Name.IndexOf(".");
+                                    contractno = fs.Name.Substring(0, start);
                                 }
-                                bool content = update_entorder(fs, destination, contractno);
-                                //如果数据库信息插入或者更新成功
-                                if (content)
+                            }
+                            bool content = update_entorder(fs, destination, contractno);
+                            //如果数据库信息插入或者更新成功
+                            if (content)
+                            {
+                                if (!Directory.Exists(direc_pdf + destination))
                                 {
-                                    if (!Directory.Exists(direc_pdf + destination))
+                                    Directory.CreateDirectory(direc_pdf + destination);
+                                }
+                                bool result = false;
+                                if (fs.Name.IndexOf(".txt") > 0 || fs.Name.IndexOf(".TXT") > 0)
+                                {
+                                    string[] split = fs.Name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+                                    result = ftp.DownloadFile(@"\" + fs.Name, direc_pdf + destination + @"\" + split[0] + "_0." + split[1]);
+                                    if (result) //TXT文件在下载成功的情况下
                                     {
-                                        Directory.CreateDirectory(direc_pdf + destination);
-                                    }
-                                    bool result = false;
-                                    if (fs.Name.IndexOf(".txt") > 0 || fs.Name.IndexOf(".TXT") > 0)
-                                    {
-                                        string[] split = fs.Name.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
-                                        result = ftp.DownloadFile(@"\" + fs.Name, direc_pdf + destination + @"\" + split[0] + "_0." + split[1]);
-                                        if (result) //TXT文件在下载成功的情况下
+                                        try
                                         {
-                                            try
+                                            StreamReader sr = new StreamReader(direc_pdf + destination + @"\" + split[0] + "_0." + split[1], Encoding.GetEncoding("BIG5"));
+                                            String line;
+                                            FileStream fs2 = new FileStream(direc_pdf + destination + @"\" + fs.Name, FileMode.Create);
+                                            while ((line = sr.ReadLine()) != null)
                                             {
-                                                StreamReader sr = new StreamReader(direc_pdf + destination + @"\" + split[0] + "_0." + split[1], Encoding.GetEncoding("BIG5"));
-                                                String line;
-                                                FileStream fs2 = new FileStream(direc_pdf + destination + @"\" + fs.Name, FileMode.Create);
-                                                while ((line = sr.ReadLine()) != null)
-                                                {
-                                                    byte[] dst = Encoding.UTF8.GetBytes(line);
-                                                    fs2.Write(dst, 0, dst.Length);
-                                                    fs2.WriteByte(13);
-                                                    fs2.WriteByte(10);
-                                                }
-                                                fs2.Flush();  //清空缓冲区、关闭流
-                                                fs2.Close();
+                                                byte[] dst = Encoding.UTF8.GetBytes(line);
+                                                fs2.Write(dst, 0, dst.Length);
+                                                fs2.WriteByte(13);
+                                                fs2.WriteByte(10);
                                             }
-                                            catch
-                                            {
-                                                result = false;
-                                            }
+                                            fs2.Flush();  //清空缓冲区、关闭流
+                                            fs2.Close();
                                         }
-                                        else
+                                        catch
                                         {
-                                            working3 = false;//如果txt文件下载失败
-                                            break;
+                                            result = false;
+                                            break;//add by panhuaguo 20170118
                                         }
                                     }
                                     else
                                     {
-                                        result = ftp.DownloadFile(@"\" + fs.Name, direc_pdf + destination + @"\" + fs.Name);
-                                    }
-                                    if (result)//pdf下载成功的情况下
-                                    {
-                                        ftp.MoveFile(@"\" + fs.Name, @"\backup\" + fs.Name);
-                                    }
-                                    else
-                                    {
-                                        working3 = false;//如果pdf文件下载失败
+                                        working3 = false;//如果txt文件下载失败
                                         break;
                                     }
                                 }
                                 else
                                 {
-                                    working3 = false;//数据库写入失败
+                                    result = ftp.DownloadFile(@"\" + fs.Name, direc_pdf + destination + @"\" + fs.Name);
+                                }
+                                if (result)//下载成功的情况下
+                                {
+                                    ftp.MoveFile(@"\" + fs.Name, @"\backup\" + fs.Name);
+                                }
+                                else
+                                {
+                                    working3 = false;//如果f文件下载失败
                                     break;
                                 }
                             }
+                            else
+                            {
+                                working3 = false;//数据库写入失败
+                                break;
+                            }
                         }
+                        #endregion
                     }
                 }
                 catch (Exception ex)
@@ -327,7 +327,7 @@ namespace BackstageTask_Second
                     enterprisecode = "3223640003";//海关10位编码  空运出口
                     enterprisename = "仁宝电子科技(昆山)有限公司";
                 }
-                if (prefix == "E1W" || prefix == "E2W" || prefix == "E1D" || prefix == "E2D" || prefix == "E7D" || prefix == "IMW" || prefix == "IMD" || prefix == "LMW" || prefix == "LMD" || prefix == "IAD" || prefix == "IEW" || prefix == "IED" || prefix == "E7W" || prefix == "LDD" || prefix == "LGW" || prefix == "LGD")
+                if (prefix == "E1W" || prefix == "E2W" || prefix == "E1D" || prefix == "E2D" || prefix == "E7D" || prefix == "IMW" || prefix == "IMD" || prefix == "LMW" || prefix == "LMD" || prefix == "IAD" || prefix == "IEW" || prefix == "IED" || prefix == "E7W" || prefix == "LDD" || prefix == "LGW" || prefix == "LGD" || prefix == "LDW")
                 {
                     enterprisecode = "3223640047";
                     enterprisename = "仁宝信息技术(昆山)有限公司";
@@ -764,7 +764,7 @@ namespace BackstageTask_Second
             }
 
         }
-        
+
     }
 }
         #endregion
