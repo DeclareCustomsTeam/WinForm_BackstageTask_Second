@@ -267,9 +267,10 @@ namespace BackstageTask_Second
                                             fs2.Flush();  //清空缓冲区、关闭流
                                             fs2.Close();
                                         }
-                                        catch
+                                        catch (Exception ex)
                                         {
-                                            result = false;
+                                            this.button3.Text = ex.Message;
+                                            working3 = false;
                                             break;//add by panhuaguo 20170118
                                         }
                                     }
